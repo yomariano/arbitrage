@@ -2,7 +2,7 @@
 
 ## Install requirements
 
-`python -m module pip install -r ./requirements.txt`
+`python -m pip install -r ./requirements.txt`
 
 ## Run
 
