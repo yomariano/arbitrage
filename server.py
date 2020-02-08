@@ -28,7 +28,7 @@ def formatToJson(graph, path, initialMoney):
             start = path[i]
             end = path[i + 1]
             rate = math.exp(-graph[start][end]['weight'])
-            money = rate
+            money *= rate
             step = {
                 'from': start,
                 'to': end,
@@ -49,14 +49,15 @@ def get_set_event_loop():
             return asyncio.get_event_loop()
         raise e
 
-@app.route('/arbitrage/', defaults={'exchanges': 'binance,kraken,bittrex', 'start_coin': "BTC" })
-@app.route('/arbitrage/<string:exchanges>/<string:start_coin>')
-def get_arbitrage(exchanges, start_coin):
+@app.route('/arbitrage/', defaults={'exchanges': 'binance,kraken,bittrex', 'start_coin': "BTC", 'initialMoney': 100 })
+@app.route('/arbitrage/<string:exchanges>/<string:start_coin>/<float:initial>')
+def get_arbitrage(exchanges, start_coin, initial):
     splitted_exchanges = str.split(exchanges, ',')
 
     print("Get Arbitrage called with:")
     print(f"\tstart_coin    = '{start_coin}'")
     print(f"\texchanges     = '{splitted_exchanges}'")
+    print(f"\initial     = '{initial}'")
 
     try:
         # Get posibilities
@@ -66,7 +67,7 @@ def get_arbitrage(exchanges, start_coin):
         graph, paths = bellman_ford_multi(graph, start_coin)
         legs = []
         for path in paths:
-            current = formatToJson(graph, path, 0.01482684)
+            current = formatToJson(graph, path, initial)
             if (current != None and current.__len__() > 0):
                 legs.append(current)
 
