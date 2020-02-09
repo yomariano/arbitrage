@@ -1,0 +1,7 @@
+flask
+flask_restful
+# peregrin + it's reqs
+git+git://github.com/wardbradt/peregrine.git#egg=peregrinearb
+git+git://github.com/wardbradt/networkx.git#egg=networkx
+numpy
+ccxt

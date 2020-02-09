@@ -1,4 +1,0 @@
-git+git://github.com/wardbradt/networkx.git#egg=networkx
-git+git://github.com/wardbradt/peregrine.git#egg=peregrinearb
-flask
-flask_restful

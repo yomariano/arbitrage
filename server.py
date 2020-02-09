@@ -1,3 +1,4 @@
+import sys
 import argparse
 import asyncio
 import math
@@ -8,14 +9,17 @@ from flask_restful import Api, Resource
 from peregrinearb import (bellman_ford_multi,
                           create_weighted_multi_exchange_digraph)
 
-parser = argparse.ArgumentParser(description="Peregrine Arbitrage API")
-parser.add_argument("--debug", type=bool, default=True)
-parser.add_argument("--port", type=int, default=5002)
-parser.add_argument("--reloader", type=bool, default=True)
-args = parser.parse_args();
-
 app = Flask(__name__)
 api = Api(app)
+
+def startServer (argsv):
+    parser = argparse.ArgumentParser(description="Peregrine Arbitrage API")
+    parser.add_argument("--debug", type=bool, default=True)
+    parser.add_argument("--port", type=int, default=5002)
+    parser.add_argument("--reloader", type=bool, default=True)
+    args = parser.parse_args()
+
+    app.run(host='0.0.0.0', debug=args.debug, use_reloader=args.reloader, port=args.port)
 
 def formatToJson(graph, path, initialMoney):
     if (path  == None):
@@ -57,7 +61,7 @@ def get_arbitrage(exchanges, start_coin, initial):
     print("Get Arbitrage called with:")
     print(f"\tstart_coin    = '{start_coin}'")
     print(f"\texchanges     = '{splitted_exchanges}'")
-    print(f"\initial     = '{initial}'")
+    print(f"\tinitial     = '{initial}'")
 
     try:
         # Get posibilities
@@ -75,4 +79,9 @@ def get_arbitrage(exchanges, start_coin, initial):
     except RuntimeError as re:
         return re.args[0], 500
 
-app.run(debug=args.debug, use_reloader=args.reloader, port=args.port)
+def main():
+    print("Starting Arbitrage REST API.")
+    startServer(sys.argv[1:])
+
+if __name__ == "__main__":
+    main()
