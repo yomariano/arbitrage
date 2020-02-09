@@ -64,7 +64,7 @@ def get_arbitrage(exchanges, start_coin, initial):
     print(f"\tinitial     = '{initial}'")
 
     try:
-        # Get posibilities
+        # Get possibilities
         get_set_event_loop();
         graph = create_weighted_multi_exchange_digraph(splitted_exchanges, log=True, fees=True)
         # search paths
