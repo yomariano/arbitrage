@@ -6,11 +6,10 @@ from json import dumps
 
 from flask import Flask, Response, request, jsonify
 from flask_restful import Api, Resource
-from peregrinearb import (bellman_ford_multi,
-                          create_weighted_multi_exchange_digraph)
+from peregrine.peregrinearb import (bellman_ford_multi,
+                                    create_weighted_multi_exchange_digraph)
 
 app = Flask(__name__)
-api = Api(app)
 
 def startServer (argsv):
     parser = argparse.ArgumentParser(description="Peregrine Arbitrage API")
@@ -53,7 +52,7 @@ def get_set_event_loop():
             return asyncio.get_event_loop()
         raise e
 
-@app.route('/arbitrage/', defaults={'exchanges': 'binance,kraken,bittrex', 'start_coin': "BTC", 'initialMoney': 100 })
+@app.route('/arbitrage/', defaults={'exchanges': 'binance,kucoin', 'start_coin': "BTC", 'initial': "100.0" })
 @app.route('/arbitrage/<string:exchanges>/<string:start_coin>/<float:initial>')
 def get_arbitrage(exchanges, start_coin, initial):
     splitted_exchanges = str.split(exchanges, ',')
@@ -66,7 +65,7 @@ def get_arbitrage(exchanges, start_coin, initial):
     try:
         # Get possibilities
         get_set_event_loop();
-        graph = create_weighted_multi_exchange_digraph(splitted_exchanges, log=True, fees=True)
+        graph = create_weighted_multi_exchange_digraph(splitted_exchanges, log=True, fees=False)
         # search paths
         graph, paths = bellman_ford_multi(graph, start_coin)
         legs = []
@@ -84,4 +83,5 @@ def main():
     startServer(sys.argv[1:])
 
 if __name__ == "__main__":
-    main()
+    flaskLoop = get_set_event_loop();
+    flaskLoop.run_until_complete(main())

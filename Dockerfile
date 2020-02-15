@@ -5,6 +5,8 @@ RUN apt-get update && \
     apt-get install git -y --no-install-recommends && \
     apt-get autoremove && \
     apt-get clean && \
+    python -m pip install  --user -r ./peregrine/requirements.txt && \
+    pip install --user -r ./peregrine && \
     python -m pip install  --user -r ./requirements.txt
 
 # =====================================================
