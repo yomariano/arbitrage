@@ -60,6 +60,7 @@ def get_set_event_loop():
 @app.route('/arbitrage/<string:exchanges>/<string:start_coin>/<float:initial>')
 def get_arbitrage(exchanges, start_coin, initial):
     splitted_exchanges = str.split(exchanges, ',')
+    start_coin = str.upper(start_coin);
 
     print("Get Arbitrage called with:")
     print(f"\tstart_coin    = '{start_coin}'")
