@@ -6,7 +6,11 @@ from json import dumps
 
 from flask import Flask, Response, request, jsonify
 from flask_restful import Api, Resource
-from peregrinearb import (bellman_ford_multi,
+try:
+    from peregrine.peregrinearb import (bellman_ford_multi,
+                                    create_weighted_multi_exchange_digraph)
+except:
+    from peregrinearb import (bellman_ford_multi,
                                     create_weighted_multi_exchange_digraph)
 
 app = Flask(__name__)
