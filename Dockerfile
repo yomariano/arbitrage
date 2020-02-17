@@ -1,13 +1,25 @@
-FROM python:3-slim-stretch as build-env
+FROM python:3-slim-stretch as build-peregrine
+WORKDIR /peregrine
 
-COPY ./requirements.txt .
+COPY ./peregrine .
+RUN ls .
 RUN apt-get update && \
     apt-get install git -y --no-install-recommends && \
     apt-get autoremove && \
     apt-get clean && \
-    python -m pip install  --user -r ./peregrine/requirements.txt && \
-    pip install --user -r ./peregrine && \
-    python -m pip install  --user -r ./requirements.txt
+    pip install --upgrade pip && \
+    python -m pip install --no-warn-script-location --user -r ./requirements.txt && \
+    pip install --user .
+
+# =====================================================
+
+FROM python:3-slim-stretch as build-env
+WORKDIR /api
+
+COPY ./*.py ./
+COPY ./*.txt ./
+COPY --from=build-peregrine /root/.local /root/.local
+RUN python -m pip install --no-warn-script-location --user -r requirements.txt
 
 # =====================================================
 
